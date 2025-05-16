@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>波斯猫 Perisnacat · XR 工程师</title>
+  <title>波斯猫的QQ空间Perisnacat Space</title>
   <style>
     body {
       margin: 0;
@@ -19,17 +19,27 @@
       z-index: -2;
     }
     header {
+      
       text-align: center;
+      display:flex;
+      justify-content: space-between;
       padding: 2rem 1rem;
       position: relative;
       background: rgba(0, 0, 0, 0.6);
       border-bottom: 2px solid #0f0;
       box-shadow: 0 0 20px #00ff00 inset;
     }
+      header1 {
+        text-align: center;
+        padding: 2rem 1rem;
+        position: relative;
+      
+      }
     header img {
       width: 80px;
       height: auto;
       filter: drop-shadow(0 0 5px #0f0);
+     
     }
     header h1 {
       font-size: 2rem;
@@ -40,11 +50,19 @@
     header p {
       font-size: 1rem;
       color: #66ff66;
+      margin-top: 0.5rem;
     }
     nav {
+        
       margin: 1rem 0;
     }
+      .profile-intro {
+        font-size: 16px;
+        margin-top: 5px;
+        text-shadow: 0 0 3px #0f0;
+      }
     nav a {
+      
       color: #00ff00;
       margin: 0 1rem;
       text-decoration: none;
@@ -95,22 +113,35 @@
 <body>
 <div class="background-3d"></div>
 <canvas id="matrix"></canvas>
+
 <header>
-  <img src="Sprite432-01.png" alt="头像">
+    <heardlist>
+  
+     <div class="profile-info">
+         <img src="Sprite432-01.png" alt="头像">
   <h1>波斯猫 Perisnacat</h1>
-  <p>Unity XR 工程师｜黑客现实主义者</p>
-  <nav>
-    <a href="#" onclick="showSection('about')">关于我</a>
-    <a href="#" onclick="showSection('projects')">项目经历</a>
-    <a href="#" onclick="showSection('skills')">专业技能</a>
-    <a href="#" onclick="showSection('experience')">工作与参赛</a>
-  </nav>
+  <p>软件工程师｜XR世界构建者</p>
+  </div>
+     </heardlist>
+     <nav>
+       <a href="#" onclick="showSection('about')">关于我</a>
+       <a href="#" onclick="showSection('projects')">专业技能</a>
+       <a href="#" onclick="showSection('skills')">作品集合</a>
+       <a href="#" onclick="showSection('experience')">工作与参赛</a>
+     </nav>
+   
+   
+ 
 </header>
 
 <div id="about" class="section active">
   <h2>关于我</h2>
   <p>Unity XR 工程师，热衷探索交互边界，善用 TTS、传感器、AI 技术打造沉浸式数字体验。</p>
+  <img src="Sprite432-01.png" alt="头像">
   <p>具备丰富大型展馆项目及 XR 游戏经验，曾负责国家电网、腾讯、西湖等重要合作项目。</p>
+  <img src="Sprite432-01.png" alt="头像">
+  <p>Unity XR 工程师，热衷探索交互边界，善用 TTS、传感器、AI 技术打造沉浸式数字体验。</p>
+ 
 </div>
 
 <div id="projects" class="section">
@@ -152,7 +183,7 @@
 </div>
 
 <footer>
-  &copy; 2025 波斯猫 Perisnacat | persiancat_6@foxmail.com
+  &copy; 2002-2025 Perisnacat  | persiancat_6@icloud.com
 </footer>
 
 <script>
