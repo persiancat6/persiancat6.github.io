@@ -1,1 +1,144 @@
-<h1>波斯猫</h1>h1
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XR工程师 · 个人主页</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+    header {
+      background: #000;
+      text-align: center;
+      padding: 3rem 1rem;
+      border-bottom: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #aaa;
+    }
+    nav {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    nav a {
+      color: #0ff;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #f0f;
+    }
+    section {
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 20px #0ff2;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    .skills span {
+      display: inline-block;
+      background: #0ff2;
+      color: #000;
+      padding: 0.3rem 0.7rem;
+      margin: 0.2rem;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: #111;
+      border-top: 2px solid #0ff;
+      color: #777;
+    }
+    .social a {
+      margin: 0 0.5rem;
+      color: #0ff;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>XR 软件工程师</h1>
+  <p>构建沉浸式未来｜Unity · Unreal · 手势交互 · MR开发</p>
+  <nav>
+    <a href="#about">关于我</a>
+    <a href="#projects">项目</a>
+    <a href="#skills">技能</a>
+    <a href="#contact">联系</a>
+  </nav>
+</header>
+
+<section id="about" class="card">
+  <h2>关于我</h2>
+  <p>你好，我是一名专注于XR（扩展现实）领域的软件工程师，擅长Unity开发、AR/VR交互设计、手势识别系统开发，以及TTS语音集成等相关技术。我的目标是通过代码打造更具沉浸感的数字体验。</p>
+</section>
+
+<section id="projects" class="card">
+  <h2>代表项目</h2>
+  <ul>
+    <li><strong>XR算命解谜游戏</strong> – 利用手势识别驱动剧情发展的互动式游戏，融合TTS语音、故事碎片、AR图像识别等技术。</li>
+    <li><strong>多模态手势识别系统</strong> – 基于肌电传感器和KNN分类器实现12种细微手势实时识别。</li>
+    <li><strong>Unity + GPT助手</strong> – 将语言模型集成至XR项目，实现语音指令控制与交互。</li>
+  </ul>
+</section>
+
+<section id="skills" class="card">
+  <h2>技能</h2>
+  <div class="skills">
+    <span>Unity</span>
+    <span>C#</span>
+    <span>MATLAB</span>
+    <span>OpenXR</span>
+    <span>手势识别</span>
+    <span>肌电传感器</span>
+    <span>TTS集成</span>
+    <span>Unreal</span>
+    <span>WebXR</span>
+    <span>Python</span>
+  </div>
+</section>
+
+<section id="contact" class="card">
+  <h2>联系我</h2>
+  <p>📧 邮箱: yourname@example.com</p>
+  <div class="social">
+    <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 XR 软件工程师. 保留所有权利.
+</footer>
+
+</body>
+</html>
