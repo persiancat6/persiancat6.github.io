@@ -1,186 +1,131 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>波斯猫 Perisnacat · XR 工程师</title>
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      color: #00ff00;
-      font-family: "Courier New", Courier, monospace;
-      overflow-x: hidden;
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -2;
-    }
-    header {
-      text-align: center;
-      padding: 2rem 1rem;
-      position: relative;
-      background: rgba(0, 0, 0, 0.6);
-      border-bottom: 2px solid #0f0;
-      box-shadow: 0 0 20px #00ff00 inset;
-    }
-    header img {
-      width: 80px;
-      height: auto;
-      filter: drop-shadow(0 0 5px #0f0);
-    }
-    header h1 {
-      font-size: 2rem;
-      color: #00ff88;
-      text-shadow: 0 0 10px #0f0;
-      margin: 0.5rem 0;
-    }
-    header p {
-      font-size: 1rem;
-      color: #66ff66;
-    }
-    nav {
-      margin: 1rem 0;
-    }
-    nav a {
-      color: #00ff00;
-      margin: 0 1rem;
-      text-decoration: none;
-      border-bottom: 1px dashed #0f0;
-    }
-    .section {
-      display: none;
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: rgba(0, 0, 0, 0.6);
-      border-left: 2px solid #0f0;
-      border-right: 2px solid #0f0;
-      box-shadow: 0 0 30px #003300;
-    }
-    .section.active {
-      display: block;
-    }
-    h2 {
-      border-bottom: 1px solid #0f0;
-      padding-bottom: 0.5rem;
-    }
-    .skills span {
-      display: inline-block;
-      margin: 0.2rem;
-      padding: 0.3rem 0.6rem;
-      border: 1px solid #0f0;
-      background: rgba(0,255,0,0.1);
-    }
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.9rem;
-      color: #0f0;
-    }
-    .background-3d {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      background: radial-gradient(ellipse at center, rgba(0,255,0,0.15) 0%, black 80%);
-      pointer-events: none;
-    }
-  </style>
-</head>
-<body>
-<div class="background-3d"></div>
-<canvas id="matrix"></canvas>
-<header>
-  <img src="Sprite432-01.png" alt="头像">
-  <h1>波斯猫 Perisnacat</h1>
-  <p>Unity XR 工程师｜黑客现实主义者</p>
-  <nav>
-    <a href="#" onclick="showSection('about')">关于我</a>
-    <a href="#" onclick="showSection('projects')">项目经历</a>
-    <a href="#" onclick="showSection('skills')">专业技能</a>
-    <a href="#" onclick="showSection('experience')">工作与参赛</a>
-  </nav>
-</header>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | HTML</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">HTML</div>
+      </div>
+    </div>
+    <script>
 
-<div id="about" class="section active">
-  <h2>关于我</h2>
-  <p>Unity XR 工程师，热衷探索交互边界，善用 TTS、传感器、AI 技术打造沉浸式数字体验。</p>
-  <p>具备丰富大型展馆项目及 XR 游戏经验，曾负责国家电网、腾讯、西湖等重要合作项目。</p>
-</div>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
 
-<div id="projects" class="section">
-  <h2>代表项目</h2>
-  <ul>
-    <li>SnapdragonXR 首款气味交互内容项目</li>
-    <li>Holokit + AI 视觉折纸训练系统</li>
-    <li>国家电网双碳展馆 8K 中控互动系统</li>
-    <li>伊利大会全息展+Kinect体感交互项目</li>
-    <li>西湖遇见敦煌 VR 大空间多用户系统</li>
-    <li>中国国际数字经济博览会导览系统</li>
-  </ul>
-</div>
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
 
-<div id="skills" class="section">
-  <h2>专业技能</h2>
-  <div class="skills">
-    <span>Unity (UGUI, DOTween, AVPro)</span>
-    <span>OpenXR / SnapdragonSDK</span>
-    <span>多平台开发：PC / Android / XR</span>
-    <span>传感器：Kinect / LeapMotion / 雷达</span>
-    <span>通信：UDP / 串口 / 蓝牙 / HTTP</span>
-    <span>语言：C# / Python / MATLAB / Java</span>
-    <span>AI集成 / TTS / GPT助手</span>
-    <span>ShaderGraph / Substance</span>
-  </div>
-</div>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/index.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/index.data",
+        frameworkUrl: buildUrl + "/index.framework.js",
+        codeUrl: buildUrl + "/index.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "HTML",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
 
-<div id="experience" class="section">
-  <h2>参赛与经历</h2>
-  <ul>
-    <li>AdventureX 黑客松 《布托》 获多奖</li>
-    <li>2023互联网+创新创业铜奖</li>
-    <li>担任网易 Unity 中文课堂讲师</li>
-    <li>现任傲雪睿视 XR 工程师</li>
-    <li>曾任芸艺科技 Unity3D 工程师</li>
-    <li>参与多个 XR 黑客松和高校大赛</li>
-  </ul>
-</div>
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
 
-<footer>
-  &copy; 2025 波斯猫 Perisnacat | persiancat_6@foxmail.com
-</footer>
+      // If you would like all file writes inside Unity Application.persistentDataPath
+      // directory to automatically persist so that the contents are remembered when
+      // the user revisits the site the next time, uncomment the following line:
+      // config.autoSyncPersistentDataPath = true;
+      // This autosyncing is currently not the default behavior to avoid regressing
+      // existing user projects that might rely on the earlier manual
+      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+      // expected to change.
 
-<script>
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = Array.from({ length: columns }).fill(1);
-function drawMatrix() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#0F0";
-  ctx.font = fontSize + "px monospace";
-  drops.forEach((y, i) => {
-    const text = letters[Math.floor(Math.random() * letters.length)];
-    ctx.fillText(text, i * fontSize, y * fontSize);
-    if (y * fontSize > canvas.height || Math.random() > 0.95) drops[i] = 0;
-    drops[i]++;
-  });
-}
-setInterval(drawMatrix, 33);
-</script>
-</body>
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+
+
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+              }).catch((message) => {
+                alert(message);
+              });
+            };
+
+      document.body.appendChild(script);
+
+    </script>
+  </body>
 </html>
