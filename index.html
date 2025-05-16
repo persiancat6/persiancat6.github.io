@@ -3,215 +3,438 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>波斯猫的QQ空间Perisnacat Space</title>
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      color: #00ff00;
-      font-family: "Courier New", Courier, monospace;
-      overflow-x: hidden;
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -2;
-    }
-    header {
-      
-      text-align: center;
-      display:flex;
-      justify-content: space-between;
-      padding: 2rem 1rem;
-      position: relative;
-      background: rgba(0, 0, 0, 0.6);
-      border-bottom: 2px solid #0f0;
-      box-shadow: 0 0 20px #00ff00 inset;
-    }
-      header1 {
-        text-align: center;
-        padding: 2rem 1rem;
-        position: relative;
-      
+  <title>波斯猫的个人博客</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terminal: {
+              bg: '#0C141F',
+              text: '#00FF00',
+              accent: '#00FFAA',
+              border: '#00CC66',
+              dark: '#050A10',
+              light: '#33FF99'
+            }
+          },
+          fontFamily: {
+            matrix: ['"Courier New"', 'Courier', 'monospace']
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'typing': 'typing 3.5s steps(40, end)',
+            'blink': 'blink .7s infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            typing: {
+              'from': { width: '0' },
+              'to': { width: '100%' }
+            },
+            blink: {
+              'from, to': { opacity: 1 },
+              '50%': { opacity: 0 }
+            }
+          }
+        }
       }
-    header img {
-      width: 80px;
-      height: auto;
-      filter: drop-shadow(0 0 5px #0f0);
-     
     }
-    header h1 {
-      font-size: 2rem;
-      color: #00ff88;
-      text-shadow: 0 0 10px #0f0;
-      margin: 0.5rem 0;
-    }
-    header p {
-      font-size: 1rem;
-      color: #66ff66;
-      margin-top: 0.5rem;
-    }
-    nav {
-        
-      margin: 1rem 0;
-    }
-      .profile-intro {
-        font-size: 16px;
-        margin-top: 5px;
-        text-shadow: 0 0 3px #0f0;
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
       }
-    nav a {
-      
-      color: #00ff00;
-      margin: 0 1rem;
-      text-decoration: none;
-      border-bottom: 1px dashed #0f0;
+      .text-shadow {
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+      }
+      .glow {
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+      }
+      .glow-hover {
+        transition: all 0.3s ease;
+      }
+      .glow-hover:hover {
+        box-shadow: 0 0 25px rgba(0, 255, 0, 0.5);
+        transform: translateY(-2px);
+      }
+      .terminal-border {
+        border: 1px solid rgba(0, 255, 0, 0.5);
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.2) inset;
+      }
+      .typing-container {
+        overflow: hidden;
+        white-space: nowrap;
+        margin: 0 auto;
+      }
+      .cursor {
+        border-right: .15em solid;
+        animation: blink .75s step-end infinite;
+      }
     }
-    .section {
-      display: none;
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: rgba(0, 0, 0, 0.6);
-      border-left: 2px solid #0f0;
-      border-right: 2px solid #0f0;
-      box-shadow: 0 0 30px #003300;
-    }
-    .section.active {
-      display: block;
-    }
-    h2 {
-      border-bottom: 1px solid #0f0;
-      padding-bottom: 0.5rem;
-    }
-    .skills span {
-      display: inline-block;
-      margin: 0.2rem;
-      padding: 0.3rem 0.6rem;
-      border: 1px solid #0f0;
-      background: rgba(0,255,0,0.1);
-    }
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.9rem;
-      color: #0f0;
-    }
-    .background-3d {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      background: radial-gradient(ellipse at center, rgba(0,255,0,0.15) 0%, black 80%);
-      pointer-events: none;
-    }
-     
   </style>
 </head>
-<body>
-<div class="background-3d"></div>
-<canvas id="matrix"></canvas>
-
-<header>
+<body class="bg-terminal-dark font-matrix text-terminal-text min-h-screen flex flex-col">
+  <!-- 背景矩阵效果 -->
+  <canvas id="matrix" class="fixed top-0 left-0 w-full h-full z-0"></canvas>
+  <div class="fixed top-0 left-0 w-full h-full bg-terminal-dark/80 z-10"></div>
   
-        <img src="/Users/liyo/XcodeProject/HTML/Sprite432-01.png" alt="头像">
-     <div class=".profile-intro">
-  <h1>波斯猫 Perisnacat</h1>
-  <p>软件工程师｜XR世界构建者</p>
+  <!-- 主容器 -->
+  <div class="container mx-auto px-4 py-8 relative z-20 flex-grow">
+    <!-- 顶部信息卡片 -->
+    <header class="bg-terminal-bg/90 rounded-lg terminal-border mb-8 overflow-hidden transform transition-all duration-500 hover:glow">
+      <div class="flex flex-col md:flex-row items-center p-6">
+        <div class="mb-4 md:mb-0 md:mr-6">
+          <img src="Sprite432-01.png" alt="头像" class="w-32 h-32 rounded-full border-2 border-terminal-border object-cover transform transition-all duration-500 hover:scale-105 animate-float">
+        </div>
+        <div class="text-center md:text-left flex-grow">
+          <h1 class="text-3xl md:text-4xl font-bold text-terminal-accent mb-2 text-shadow">
+            波斯猫 <span class="text-terminal-text">Perisnacat</span>
+          </h1>
+          <p class="typing-container inline-block">
+            <span class="cursor">软件工程师｜数字世界构建者</span>
+          </p>
+        </div>
+        <div class="mt-6 md:mt-0">
+          <nav class="flex flex-col sm:flex-row gap-3">
+            <a href="https://www.doubao.com/chat/5485563656591106" onclick="showSection('about')" class="px-4 py-2 rounded-md border border-terminal-border text-terminal-text hover:bg-terminal-text/10 transition-all duration-300 text-center glow-hover">
+              <i class="fa fa-user mr-2"></i>自我介绍
+            </a>
+            <a href="#" onclick="showSection('projects')" class="px-4 py-2 rounded-md border border-terminal-border text-terminal-text hover:bg-terminal-text/10 transition-all duration-300 text-center glow-hover">
+              <i class="fa fa-briefcase mr-2"></i>作品集合
+            </a>
+            <a href="#" onclick="showSection('skills')" class="px-4 py-2 rounded-md border border-terminal-border text-terminal-text hover:bg-terminal-text/10 transition-all duration-300 text-center glow-hover">
+              <i class="fa fa-code mr-2"></i>技能树
+            </a>
+            <a href="#" onclick="showSection('experience')" class="px-4 py-2 rounded-md border border-terminal-border text-terminal-text hover:bg-terminal-text/10 transition-all duration-300 text-center glow-hover">
+              <i class="fa fa-trophy mr-2"></i>联系方式
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
+    
+    <!-- 内容区域 -->
+    <main class="grid grid-cols-1 gap-8">
+      <!-- 关于我 -->
+      <div id="about" class="section bg-terminal-bg/90 rounded-lg terminal-border p-6 transform transition-all duration-500 hover:glow">
+        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-terminal-border text-terminal-accent">
+          <i class="fa fa-user mr-2"></i>关于我
+        </h2>
+        <div class="prose prose-invert max-w-none">
+          <p class="mb-4">Unity XR 工程师，热衷探索交互边界，善用 TTS、传感器、AI 技术打造沉浸式数字体验。</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <img src="https://picsum.photos/400/300" alt="工作照" class="rounded-lg border border-terminal-border w-full h-auto transform transition-all duration-500 hover:scale-105">
+            <img src="https://picsum.photos/400/301" alt="项目展示" class="rounded-lg border border-terminal-border w-full h-auto transform transition-all duration-500 hover:scale-105">
+          </div>
+          <p>具备丰富大型展馆项目及 XR 游戏经验，曾负责国家电网、腾讯、西湖等重要合作项目。</p>
+          <p class="mt-4">长期致力于探索前沿交互技术，追求突破虚拟与现实的界限，创造沉浸式体验。</p>
+        </div>
+      </div>
+      
+      <!-- 代表项目 -->
+      <div id="projects" class="section bg-terminal-bg/90 rounded-lg terminal-border p-6 hidden transform transition-all duration-500 hover:glow">
+        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-terminal-border text-terminal-accent">
+          <i class="fa fa-briefcase mr-2"></i>代表项目
+        </h2>
+        
+        <!--跳转模版案例 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="https://www.doubao.com/chat/5485563656591106" onclick="showSection('about')" class="bg-terminal-dark/50 rounded-lg p-4 border border-terminal-border/50 transform transition-all duration-300 hover:scale-105 hover:border-terminal-border">
+            <div>
+              <h3 class="text-lg font-bold text-terminal-accent mb-2">国家电网双碳展馆</h3>
+              <p class="text-sm mb-3">8K中控互动系统，展示能源管理与碳中和成果</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 bg-terminal-text/10 text-xs rounded">Unity</span>
+                <span class="px-2 py-1 bg-terminal-text/10 text-xs rounded">8K渲染</span>
+                <span class="px-2 py-1 bg-terminal-text/10 text-xs rounded">数据可视化</span>
+              </div>
+            </div>
+            </a>
+            
+            <a href="https://www.doubao.com/chat/5485563656591106" onclick="showSection('about')" class="bg-terminal-dark/50 rounded-lg p-4 border border-terminal-border/50 transform transition-all duration-300 hover:scale-105 hover:border-terminal-border">
+            <div>
+              <h3 class="text-lg font-bold text-terminal-accent mb-2">国家电网双碳展馆</h3>
+              <p class="text-sm mb-3">8K中控互动系统，展示能源管理与碳中和成果</p>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-2 py-1 bg-terminal-text/10 text-xs rounded">Unity</span>
+                <span class="px-2 py-1 bg-terminal-text/10 text-xs rounded">8K渲染</span>
+                <span class="px-2 py-1 bg-terminal-text/10 text-xs rounded">数据可视化</span>
+              </div>
+            </div>
+            </a>
+            
+            
+          </div>
+        </div>
+      </div>
+      
+      <!-- 作品集合 -->
+      <div id="skills" class="section bg-terminal-bg/90 rounded-lg terminal-border p-6 hidden transform transition-all duration-500 hover:glow">
+        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-terminal-border text-terminal-accent">
+          <i class="fa fa-code mr-2"></i>专业技能
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-xl font-bold text-terminal-accent mb-3">开发技能</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>Unity开发</span>
+                  <span>95%</span>
+                </div>
+                <div class="h-2 bg-terminal-dark rounded-full overflow-hidden">
+                  <div class="h-full bg-terminal-text" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>XR开发</span>
+                  <span>90%</span>
+                </div>
+                <div class="h-2 bg-terminal-dark rounded-full overflow-hidden">
+                  <div class="h-full bg-terminal-text" style="width: 90%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>C#编程</span>
+                  <span>88%</span>
+                </div>
+                <div class="h-2 bg-terminal-dark rounded-full overflow-hidden">
+                  <div class="h-full bg-terminal-text" style="width: 88%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span>传感器集成</span>
+                  <span>85%</span>
+                </div>
+                <div class="h-2 bg-terminal-dark rounded-full overflow-hidden">
+                  <div class="h-full bg-terminal-text" style="width: 85%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold text-terminal-accent mb-3">技术栈</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-terminal-dark/50 p-3 rounded-lg border border-terminal-border/50">
+                <h4 class="font-bold text-terminal-accent mb-2">引擎与框架</h4>
+                <ul class="space-y-1 text-sm">
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> Unity (UGUI, DOTween, AVPro)</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> OpenXR / SnapdragonSDK</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> ShaderGraph / Substance</li>
+                </ul>
+              </div>
+              
+              <div class="bg-terminal-dark/50 p-3 rounded-lg border border-terminal-border/50">
+                <h4 class="font-bold text-terminal-accent mb-2">硬件与传感器</h4>
+                <ul class="space-y-1 text-sm">
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> Kinect / LeapMotion</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> 雷达 / 深度相机</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> 气味模拟器</li>
+                </ul>
+              </div>
+              
+              <div class="bg-terminal-dark/50 p-3 rounded-lg border border-terminal-border/50">
+                <h4 class="font-bold text-terminal-accent mb-2">通信与集成</h4>
+                <ul class="space-y-1 text-sm">
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> UDP / 串口 / 蓝牙</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> HTTP / REST API</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> AI集成 / TTS</li>
+                </ul>
+              </div>
+              
+              <div class="bg-terminal-dark/50 p-3 rounded-lg border border-terminal-border/50">
+                <h4 class="font-bold text-terminal-accent mb-2">编程语言</h4>
+                <ul class="space-y-1 text-sm">
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> C#</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> Python</li>
+                  <li><i class="fa fa-check text-terminal-text mr-1"></i> MATLAB / Java</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 工作与参赛 -->
+      <div id="experience" class="section bg-terminal-bg/90 rounded-lg terminal-border p-6 hidden transform transition-all duration-500 hover:glow">
+        <h2 class="text-2xl font-bold mb-4 pb-2 border-b border-terminal-border text-terminal-accent">
+          <i class="fa fa-trophy mr-2"></i>参赛与经历
+        </h2>
+        <div class="space-y-6">
+          <div class="bg-terminal-dark/50 rounded-lg p-4 border border-terminal-border/50 transform transition-all duration-300 hover:border-terminal-border">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-lg font-bold text-terminal-accent">傲雪睿视</h3>
+              <span class="text-sm bg-terminal-text/10 px-2 py-1 rounded">2022年至今</span>
+            </div>
+            <p class="text-sm mb-2">担任XR工程师，负责企业级XR应用开发与技术研究</p>
+            <ul class="list-disc list-inside text-sm space-y-1">
+              <li>主导多个展馆互动项目的技术实现</li>
+              <li>研究前沿交互技术，推动产品创新</li>
+              <li>指导团队成员技术成长</li>
+            </ul>
+          </div>
+          
+          <div class="bg-terminal-dark/50 rounded-lg p-4 border border-terminal-border/50 transform transition-all duration-300 hover:border-terminal-border">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-lg font-bold text-terminal-accent">芸艺科技</h3>
+              <span class="text-sm bg-terminal-text/10 px-2 py-1 rounded">2020-2022</span>
+            </div>
+            <p class="text-sm mb-2">Unity3D工程师，专注于AR/VR内容开发</p>
+            <ul class="list-disc list-inside text-sm space-y-1">
+              <li>开发多款AR教育与展示应用</li>
+              <li>优化项目性能，提升用户体验</li>
+              <li>参与产品需求分析与技术选型</li>
+            </ul>
+          </div>
+          
+          <div class="bg-terminal-dark/50 rounded-lg p-4 border border-terminal-border/50 transform transition-all duration-300 hover:border-terminal-border">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-lg font-bold text-terminal-accent">AdventureX黑客松</h3>
+              <span class="text-sm bg-terminal-text/10 px-2 py-1 rounded">2023</span>
+            </div>
+            <p class="text-sm mb-2">项目《布托》获得多个奖项</p>
+            <ul class="list-disc list-inside text-sm space-y-1">
+              <li>最佳创新奖</li>
+              <li>最具潜力AR/VR项目</li>
+              <li>Snapdragon最佳技术实现</li>
+            </ul>
+          </div>
+          
+          <div class="bg-terminal-dark/50 rounded-lg p-4 border border-terminal-border/50 transform transition-all duration-300 hover:border-terminal-border">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-lg font-bold text-terminal-accent">互联网+创新创业大赛</h3>
+              <span class="text-sm bg-terminal-text/10 px-2 py-1 rounded">2023</span>
+            </div>
+            <p class="text-sm">团队项目获得铜奖</p>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
-     </heardlist>
-     <nav>
-       <a href="#" onclick="showSection('about')">关于我</a>
-       <a href="#" onclick="showSection('projects')">专业技能</a>
-       <a href="#" onclick="showSection('skills')">作品集合</a>
-       <a href="#" onclick="showSection('experience')">工作与参赛</a>
-     </nav>
-   
-   
- 
-</header>
-
-<div id="about" class="section active">
-  <h2>关于我</h2>
-  <p>Unity XR 工程师，热衷探索交互边界，善用 TTS、传感器、AI 技术打造沉浸式数字体验。</p>
-  <img src="Sprite432-01.png" alt="头像">
-  <p>具备丰富大型展馆项目及 XR 游戏经验，曾负责国家电网、腾讯、西湖等重要合作项目。</p>
-  <img src="Sprite432-01.png" alt="头像">
-  <p>Unity XR 工程师，热衷探索交互边界，善用 TTS、传感器、AI 技术打造沉浸式数字体验。</p>
- 
-</div>
-
-<div id="projects" class="section">
-  <h2>代表项目</h2>
-  <ul>
-    <li>SnapdragonXR 首款气味交互内容项目</li>
-    <li>Holokit + AI 视觉折纸训练系统</li>
-    <li>国家电网双碳展馆 8K 中控互动系统</li>
-    <li>伊利大会全息展+Kinect体感交互项目</li>
-    <li>西湖遇见敦煌 VR 大空间多用户系统</li>
-    <li>中国国际数字经济博览会导览系统</li>
-  </ul>
-</div>
-
-<div id="skills" class="section">
-  <h2>专业技能</h2>
-  <div class="skills">
-    <span>Unity (UGUI, DOTween, AVPro)</span>
-    <span>OpenXR / SnapdragonSDK</span>
-    <span>多平台开发：PC / Android / XR</span>
-    <span>传感器：Kinect / LeapMotion / 雷达</span>
-    <span>通信：UDP / 串口 / 蓝牙 / HTTP</span>
-    <span>语言：C# / Python / MATLAB / Java</span>
-    <span>AI集成 / TTS / GPT助手</span>
-    <span>ShaderGraph / Substance</span>
-  </div>
-</div>
-
-<div id="experience" class="section">
-  <h2>参赛与经历</h2>
-  <ul>
-    <li>AdventureX 黑客松 《布托》 获多奖</li>
-    <li>2023互联网+创新创业铜奖</li>
-    <li>担任网易 Unity 中文课堂讲师</li>
-    <li>现任傲雪睿视 XR 工程师</li>
-    <li>曾任芸艺科技 Unity3D 工程师</li>
-    <li>参与多个 XR 黑客松和高校大赛</li>
-  </ul>
-</div>
-
-<footer>
-  &copy; 2002-2025 Perisnacat  | persiancat_6@icloud.com
-</footer>
-
-<script>
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = Array.from({ length: columns }).fill(1);
-function drawMatrix() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#0F0";
-  ctx.font = fontSize + "px monospace";
-  drops.forEach((y, i) => {
-    const text = letters[Math.floor(Math.random() * letters.length)];
-    ctx.fillText(text, i * fontSize, y * fontSize);
-    if (y * fontSize > canvas.height || Math.random() > 0.95) drops[i] = 0;
-    drops[i]++;
-  });
-}
-setInterval(drawMatrix, 33);
-</script>
+  
+  <!-- 页脚 -->
+  <footer class="bg-terminal-bg/90 terminal-border py-4 mt-8 relative z-20">
+    <div class="container mx-auto px-4 text-center text-sm">
+      <p>&copy; 2000-2025 Perisnacat Certification  | E-mail：persiancat_6@icloud.com</p>
+      <div class="flex justify-center gap-4 mt-3">
+        <a href="#" class="text-terminal-text hover:text-terminal-accent transition-colors">
+          <i class="fa fa-github"></i> GitHub
+        </a>
+        <a href="#" class="text-terminal-text hover:text-terminal-accent transition-colors">
+          <i class="fa fa-linkedin"></i> Bilibili
+        </a>
+        <a href="#" class="text-terminal-text hover:text-terminal-accent transition-colors">
+          <i class="fa fa-envelope"></i> RedBook
+        </a>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // 切换显示内容
+    function showSection(id) {
+      // 添加淡出效果
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.add('opacity-0');
+        setTimeout(() => {
+          section.classList.add('hidden');
+          section.classList.remove('opacity-0');
+        }, 300);
+      });
+      
+      // 显示选中的内容
+      setTimeout(() => {
+        const target = document.getElementById(id);
+        target.classList.remove('hidden');
+        // 添加淡入效果
+        setTimeout(() => {
+          target.classList.add('opacity-100');
+        }, 10);
+      }, 300);
+    }
+    
+    // 矩阵背景效果
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    
+    const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }).fill(1);
+    
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+      
+      drops.forEach((y, i) => {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, y * fontSize);
+        
+        if (y * fontSize > canvas.height || Math.random() > 0.95) {
+          drops[i] = 0;
+        }
+        
+        drops[i]++;
+      });
+    }
+    
+    setInterval(drawMatrix, 33);
+    
+    // 窗口大小变化时调整canvas尺寸
+    window.addEventListener('resize', () => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
+    
+    // 页面加载完成后的动画效果
+    document.addEventListener('DOMContentLoaded', () => {
+      // 导航栏滚动效果
+      const header = document.querySelector('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          header.classList.add('bg-terminal-bg/95', 'shadow-lg');
+          header.classList.remove('bg-terminal-bg/90');
+        } else {
+          header.classList.remove('bg-terminal-bg/95', 'shadow-lg');
+          header.classList.add('bg-terminal-bg/90');
+        }
+      });
+      
+      // 为所有section添加进入视口时的动画
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100');
+            entry.target.classList.remove('opacity-0', 'translate-y-8');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('opacity-0', 'translate-y-8', 'transition-all', 'duration-700');
+        observer.observe(section);
+      });
+    });
+  </script>
 </body>
 </html>
