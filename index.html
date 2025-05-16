@@ -16,18 +16,33 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: -1;
+      z-index: -2;
     }
     header {
       text-align: center;
-      padding: 4rem 1rem 2rem;
+      padding: 2rem 1rem;
+      position: relative;
+      background: rgba(0, 0, 0, 0.6);
+      border-bottom: 2px solid #0f0;
+      box-shadow: 0 0 20px #00ff00 inset;
+    }
+    header img {
+      width: 80px;
+      height: auto;
+      filter: drop-shadow(0 0 5px #0f0);
     }
     header h1 {
-      font-size: 2.5rem;
-      text-shadow: 0 0 5px #0f0;
+      font-size: 2rem;
+      color: #00ff88;
+      text-shadow: 0 0 10px #0f0;
+      margin: 0.5rem 0;
+    }
+    header p {
+      font-size: 1rem;
+      color: #66ff66;
     }
     nav {
-      margin: 2rem 0;
+      margin: 1rem 0;
     }
     nav a {
       color: #00ff00;
@@ -38,11 +53,12 @@
     .section {
       display: none;
       max-width: 960px;
-      margin: auto;
+      margin: 2rem auto;
       padding: 2rem;
       background: rgba(0, 0, 0, 0.6);
       border-left: 2px solid #0f0;
       border-right: 2px solid #0f0;
+      box-shadow: 0 0 30px #003300;
     }
     .section.active {
       display: block;
@@ -56,6 +72,7 @@
       margin: 0.2rem;
       padding: 0.3rem 0.6rem;
       border: 1px solid #0f0;
+      background: rgba(0,255,0,0.1);
     }
     footer {
       text-align: center;
@@ -63,11 +80,23 @@
       font-size: 0.9rem;
       color: #0f0;
     }
+    .background-3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      background: radial-gradient(ellipse at center, rgba(0,255,0,0.15) 0%, black 80%);
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+<div class="background-3d"></div>
 <canvas id="matrix"></canvas>
 <header>
+  <img src="Sprite432-01.png" alt="头像">
   <h1>波斯猫 Perisnacat</h1>
   <p>Unity XR 工程师｜黑客现实主义者</p>
   <nav>
@@ -131,7 +160,6 @@ function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
