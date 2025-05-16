@@ -1,94 +1,104 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>XR工程师 · 个人主页</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perisnacat · XR Hacker</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f0f0f;
-      color: #ffffff;
-      line-height: 1.6;
+      padding: 0;
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      background: black;
     }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
     header {
-      background: #000;
       text-align: center;
-      padding: 3rem 1rem;
-      border-bottom: 2px solid #0ff;
-      box-shadow: 0 0 10px #0ff;
+      padding: 5rem 1rem 2rem 1rem;
+      border-bottom: 1px solid #0f0;
     }
+
     header h1 {
-      font-size: 2.5rem;
-      color: #0ff;
-      text-shadow: 0 0 10px #0ff;
-      margin-bottom: 0.5rem;
+      font-size: 3rem;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
     }
+
     header p {
       font-size: 1.2rem;
-      color: #aaa;
-    }
-    nav {
-      text-align: center;
+      color: #0f0;
       margin-top: 1rem;
     }
+
+    nav {
+      margin: 2rem 0;
+      text-align: center;
+    }
+
     nav a {
-      color: #0ff;
-      margin: 0 1rem;
+      color: #00ff00;
+      margin: 0 1.5rem;
       text-decoration: none;
       font-weight: bold;
-      transition: color 0.3s;
+      font-size: 1rem;
     }
+
     nav a:hover {
-      color: #f0f;
+      color: #0ff;
     }
+
     section {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 1rem;
+      max-width: 900px;
+      margin: auto;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 2px solid #0f0;
+      border-right: 2px solid #0f0;
+      margin-bottom: 2rem;
     }
-    .card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 0 20px #0ff2;
-      transition: transform 0.3s;
+
+    h2 {
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
     }
-    .card:hover {
-      transform: scale(1.02);
-    }
+
     .skills span {
       display: inline-block;
-      background: #0ff2;
-      color: #000;
-      padding: 0.3rem 0.7rem;
+      background: #003300;
+      padding: 0.3rem 0.6rem;
       margin: 0.2rem;
-      border-radius: 5px;
-      font-weight: bold;
+      border-radius: 4px;
+      color: #00ff00;
+      border: 1px solid #00ff00;
     }
+
     footer {
       text-align: center;
       padding: 2rem 1rem;
-      background: #111;
-      border-top: 2px solid #0ff;
-      color: #777;
-    }
-    .social a {
-      margin: 0 0.5rem;
-      color: #0ff;
-      font-size: 1.5rem;
-      text-decoration: none;
+      border-top: 1px solid #0f0;
+      font-size: 0.9rem;
+      color: #0f0;
     }
   </style>
 </head>
 <body>
 
+<canvas id="matrix"></canvas>
+
 <header>
-  <h1>XR 软件工程师</h1>
-  <p>构建沉浸式未来｜Unity · Unreal · 手势交互 · MR开发</p>
+  <h1>波斯猫 Perisnacat</h1>
+  <p>Unity XR 软件工程师 · 黑客现实主义者 · 虚拟交互探索者</p>
   <nav>
     <a href="#about">关于我</a>
     <a href="#projects">项目</a>
@@ -97,48 +107,76 @@
   </nav>
 </header>
 
-<section id="about" class="card">
+<section id="about">
   <h2>关于我</h2>
-  <p>你好，我是一名专注于XR（扩展现实）领域的软件工程师，擅长Unity开发、AR/VR交互设计、手势识别系统开发，以及TTS语音集成等相关技术。我的目标是通过代码打造更具沉浸感的数字体验。</p>
+  <p>我是波斯猫 Perisnacat，一名沉浸于代码与虚拟边界之间的 XR 软件工程师。我专注于构建 Unity 平台下的 AR/VR/MR 应用，通过手势识别、TTS 语音系统与数字世界对话，打造人机交互的新形态。</p>
 </section>
 
-<section id="projects" class="card">
-  <h2>代表项目</h2>
+<section id="projects">
+  <h2>项目经验</h2>
   <ul>
-    <li><strong>XR算命解谜游戏</strong> – 利用手势识别驱动剧情发展的互动式游戏，融合TTS语音、故事碎片、AR图像识别等技术。</li>
-    <li><strong>多模态手势识别系统</strong> – 基于肌电传感器和KNN分类器实现12种细微手势实时识别。</li>
-    <li><strong>Unity + GPT助手</strong> – 将语言模型集成至XR项目，实现语音指令控制与交互。</li>
+    <li><strong>黑客占卜 XR</strong> - 一款融合 XR 手势识别与语音解谜的互动体验，灵感来自《黑客帝国》与塔罗学。</li>
+    <li><strong>双通道肌电手势识别</strong> - 基于 MATLAB + KNN 模型的 EMG 高精度手势系统，支持实时串口识别。</li>
+    <li><strong>GPT语音助手 for Unity</strong> - 集成本地TTS与对话模型，为 XR 项目赋能自然语音交互。</li>
   </ul>
 </section>
 
-<section id="skills" class="card">
-  <h2>技能</h2>
+<section id="skills">
+  <h2>技能栈</h2>
   <div class="skills">
     <span>Unity</span>
     <span>C#</span>
-    <span>MATLAB</span>
     <span>OpenXR</span>
     <span>手势识别</span>
-    <span>肌电传感器</span>
-    <span>TTS集成</span>
-    <span>Unreal</span>
-    <span>WebXR</span>
+    <span>MATLAB</span>
     <span>Python</span>
+    <span>Unreal Engine</span>
+    <span>WebXR</span>
+    <span>TTS系统</span>
+    <span>EMG传感器</span>
   </div>
 </section>
 
-<section id="contact" class="card">
+<section id="contact">
   <h2>联系我</h2>
-  <p>📧 邮箱: yourname@example.com</p>
-  <div class="social">
-    <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-    <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
-  </div>
+  <p>📧 Email: perisnacat@matrixmail.com</p>
+  <p>🐱 GitHub: <a href="https://github.com/perisnacat" target="_blank">github.com/perisnacat</a></p>
 </section>
 
 <footer>
-  &copy; 2025 XR 软件工程师. 保留所有权利.
+  &copy; 2025 波斯猫 Perisnacat | Matrix is not just a movie. It's the interface.
 </footer>
+
+<!-- Matrix Rain Effect -->
+<script>
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  const letters = 'アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array.from({length: columns}).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#0F0';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height || Math.random() > 0.95) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+</script>
 
 </body>
 </html>
