@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>急速光轮</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0;
+      height: 100%;
+      background: #000;
+      font-family: 'Orbitron', monospace, Arial, sans-serif;
+      color: #0ff;
+      user-select: none;
+      overflow: hidden;
+    }
+    #container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      gap: 20px;
+      background: #000;
+      box-sizing: border-box;
+    }
+    #leftPanel, #rightPanel {
+      width: 240px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+      user-select: none;
+    }
+    #leftPanel h1, #rightPanel h2 {
+      margin: 0;
+      font-weight: 900;
+      text-align: center;
+      font-size: 24px;
+      text-shadow:
+        0 0 8px #0ff,
+        0 0 20px #0ff;
+    }
+    #gameAreaWrapper {
+      position: relative;
+      flex: 1;
+      max-width: 600px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 16px;
+      background: #070c11;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #gameArea {
+      position: relative;
+      width: 600px;
+      height: 600px;
+      border-radius: 16px;
+      box-shadow:
+        0 0 10px 3px cyan,
+        inset 0 0 12px 4px cyan,
+        0 0 30px 10px #0ff,
+        0 0 40px 15px #05f,
+        0 0 50px 20px #09f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #070c11;
+    }
+    canvas {
+      border-radius: 12px;
+      box-shadow:
+        0 0 18px #00ffff88,
+        inset 0 0 25px #00ffffaa;
+      display: block;
+      width: 600px;
+      height: 600px;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    #headerLeft {
+      font-size: 16px;
+      line-height: 1.3em;
+      user-select: none;
+      white-space: pre-wrap;
+      padding: 0 8px;
+    }
+    #info {
+      font-size: 14px;
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 4px #0ff;
+      margin-top: 10px;
+      user-select: none;
+    }
+    #rightPanel h2 {
+      margin-bottom: 8px;
+      font-size: 20px;
+      text-align: center;
+    }
+    #scoreBoard {
+      font-size: 16px;
+    }
+    .p-status {
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      padding: 8px 16px;
+      margin-bottom: 16px;
+      background: #00334444;
+      box-shadow: 0 0 6px #0ff88a;
+      color: #cfffcf;
+      user-select: none;
+    }
+    .p-name {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 6px;
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 6px #0ff;
+    }
+    .p-effect {
+      font-size: 14px;
+      min-height: 22px;
+      margin-top: 2px;
+      word-break: break-word;
+    }
+    #itemsDisplay {
+      color:#0ff; 
+      font-family: monospace; 
+      min-height:24px; 
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+      user-select:none;
+      text-shadow: 0 0 5px #0ff;
+      white-space: pre-wrap;
+    }
+    #winner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      font-size: 48px;
+      font-weight: 900;
+      color: #ff2962;
+      text-shadow:
+        0 0 30px #ff2962, 
+        0 0 50px #ff2962;
+      user-select: none;
+      display: none;
+      white-space: nowrap;
+      z-index: 10;
+      text-align: center;
+      max-width: 90vw;
+      word-break: normal;
+    }
+    #bottomControls {
+      margin-top: 10px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 20;
+      min-height: 60px;
+    }
+    
+    /* 合并按钮样式到.modeBtn类 */
+    button.modeBtn {
+      margin: 0 6px 10px 6px;
+      padding: 12px 30px; /* 统一内边距 */
+      font-size: 18px; /* 统一字体大小 */
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background: #0ff;
+      color: #000;
+      font-weight: 600;
+      letter-spacing: 0.06em; /* 统一字母间距 */
+      user-select: none;
+      width: auto;
+      font-family: 'Orbitron', monospace, Arial, sans-serif; /* 统一字体 */
+    }
+    
+    button.modeBtn:hover:not(.active),
+    button.modeBtn:focus:not(.active) {
+      background: #088;
+      color: #aaf;
+      outline: none;
+      box-shadow: 0 0 20px #0ff;
+      outline-offset: 4px;
+      outline: 2px solid #0ff;
+    }
+    
+    button.modeBtn.active {
+      background: #055;
+      color: #0ff;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="leftPanel" aria-label="游戏介绍">
+      <h1>急速光轮</h1>
+      <div id="headerLeft">
+        控制你的光轮，在无限循环的竞技场极速穿梭，躲避自身及对手留下的致命轨迹。<br><br>
+        利用随机掉落的各种道具，实现战略逆转，获得优势：<br>
+        <span style="color:#00f;">蓝色：</span> 立即重新开始游戏（重置竞技场）<br>
+        <span style="color:#f00;">红色：</span> 旧版秒杀道具功能（回归主界面）<br>
+        <span style="color:#a020f0;">紫色：</span> 将对方分数和轨迹减半，效果持续中。<br>
+        <span style="color:#00ff64;">绿（旧加速）：</span> 加速你的光轮，持续时间内移动更快<br>
+        <span style="color:#ff9600;">橙（旧减速）：</span> 减缓对手速度，持续时间内行动缓慢<br>
+        <span style="color:#ffff00;">黄（旧无敌）：</span> 短暂无敌，能穿过轨迹和障碍
+      </div>
+    </div>
+    <div id="gameAreaWrapper" role="region" aria-label="游戏区域">
+      <div id="gameArea">
+        <canvas id="game" width="600" height="600" tabindex="0"></canvas>
+        <div id="winner" role="alert" aria-live="assertive"></div>
+      </div>
+      <div id="bottomControls">
+        <!-- 两个按钮都使用modeBtn类 -->
+        <button id="restartBtn" class="modeBtn" aria-label="重新开始游戏">重新开始</button>
+        <button id="backToHomeBtn" class="modeBtn" aria-label="返回主页">返回主页</button>
+      </div>
+    </div>
+    <div id="rightPanel" aria-label="游戏信息面板">
+      <button id="singleBtn" class="modeBtn" aria-pressed="false">单人模式（蓝 vs PersianCat）</button>
+      <button id="doubleBtn" class="modeBtn active" aria-pressed="true">双人模式</button>
+     
+      <div id="itemsDisplay" aria-live="polite" aria-atomic="true">当前地图道具: 无</div>
+      <div id="info" aria-live="polite" aria-atomic="true">1 
+        玩家1 (蓝): WASD 控制<br>
+        玩家2 (红): 方向键 控制 / AI操控（单人模式）
+      </div>
+      <div id="scoreBoard">
+        <div class="p-status" id="status1">
+          <div class="p-name">玩家1</div>
+          <div>得分: <span id="score1" aria-label="玩家1得分">0</span></div>
+          <div class="p-effect" id="effect1" aria-live="polite" aria-atomic="true">-</div>
+        </div>
+        <div class="p-status" id="status2">
+          <div class="p-name" id="name2">玩家2</div>
+          <div>得分: <span id="score2" aria-label="玩家2得分">0</span></div>
+          <div class="p-effect" id="effect2" aria-live="polite" aria-atomic="true">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const winnerElem = document.getElementById('winner');
+    const restartBtn = document.getElementById('restartBtn');
+    const singleBtn = document.getElementById('singleBtn');
+    const doubleBtn = document.getElementById('doubleBtn');
+    const infoElem = document.getElementById('info');
+    const itemsDisplay = document.getElementById('itemsDisplay');
+    const score1Elem = document.getElementById('score1');
+    const score2Elem = document.getElementById('score2');
+    const effect1Elem = document.getElementById('effect1');
+    const effect2Elem = document.getElementById('effect2');
+    const name2Elem = document.getElementById('name2');
+    const backToHomeBtn = document.getElementById('backToHomeBtn');
+
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    const CELL_SIZE = 15;
+    const COLS = WIDTH / CELL_SIZE;
+    const ROWS = HEIGHT / CELL_SIZE;
+
+    const DIRS = {
+      up:    {x: 0, y: -1},
+      down:  {x: 0, y: 1},
+      left:  {x: -1, y: 0},
+      right: {x: 1, y: 0}
+    };
+
+    // 初始模式为单人 AI 对战
+    let mode = 'single'; 
+
+    const players = [
+      {
+        name: "玩家1",
+        baseColorBase: [0, 180, 255],
+        baseNeonColor: [0, 255, 255],
+        pos: {x: Math.floor(COLS / 4), y: Math.floor(ROWS / 2)},
+        dir: DIRS.right,
+        trail: new Set(),
+        alive: true,
+        nextDir: null,
+        keyMap: {
+          KeyW: DIRS.up,
+          KeyA: DIRS.left,
+          KeyS: DIRS.down,
+          KeyD: DIRS.right
+        },
+        isAI: false,
+        score: 0,
+        effects: {},
+        speedMultiplier: 1,
+        currentColorBase: null,
+        currentNeonColor: null
+      },
+      {
+        name: "玩家2",
+        baseColorBase: [255, 0, 50], 
+        baseNeonColor: [255, 80, 80],
+        pos: {x: Math.floor(COLS * 3 / 4), y: Math.floor(ROWS / 2)},
+        dir: DIRS.left,
+        trail: new Set(),
+        alive: true,
+        nextDir: null,
+        keyMap: {
+          ArrowUp: DIRS.up,
+          ArrowLeft: DIRS.left,
+          ArrowDown: DIRS.down,
+          ArrowRight: DIRS.right
+        },
+        isAI: false,
+        score: 0,
+        effects: {},
+        speedMultiplier: 1,
+        currentColorBase: null,
+        currentNeonColor: null
+      }
+    ];
+
+    let gameOver = false;
+    let aiChangeCounter = 0;
+    let frameTimer = 0;
+    let baseSpeedDelay = 80;
+
+    const itemTypes = {
+      restart: {name: "重置", color: [0, 0, 255], duration: 1, desc: "吃下立即重置游戏。"},
+      kill: {name: "秒杀", color: [255, 0, 0], duration: 1, desc: "吃下触发旧版秒杀，功能回归主界面。"},
+      halve: {name: "削减", color: [160, 32, 240], duration: 100, desc: "使对手分数与轨迹减半，效果持续中。"},
+      speed: {name: "加速", color: [0, 255, 100], duration: 150, desc: "加速你的光轮，持续时间内移动更快。"},
+      slow: {name: "减速", color: [255, 150, 0], duration: 150, desc: "减缓对手速度，持续时间内行动缓慢。"},
+      shield: {name: "无敌", color: [255, 255, 0], duration: 120, desc: "短暂无敌，可穿过轨迹和障碍。"},
+    };
+
+    const items = [];
+
+    const ITEM_INTERVAL = 200;
+    let itemTimer = 0;
+
+    function posToStr(pos) {
+      return `${pos.x},${pos.y}`;
+    }
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function isSafePos(pos) {
+      if(pos.x < 0) pos.x = COLS - 1;
+      if(pos.x >= COLS) pos.x = 0;
+      if(pos.y < 0) pos.y = ROWS - 1;
+      if(pos.y >= ROWS) pos.y = 0;
+      for(const p of players) {
+        if(p.trail.has(posToStr(pos))) return false;
+      }
+      return true;
+    }
+
+    function rgba(r,g,b,a=1) {
+      return `rgba(${r},${g},${b},${a})`;
+    }
+
+    function drawBackgroundGrid(){
+      ctx.fillStyle = '#000a';
+      ctx.fillRect(0,0,WIDTH,HEIGHT);
+      const hueShift = (performance.now()/50)%360;
+      ctx.strokeStyle = `hsl(${hueShift}, 80%, 45%)`;
+      ctx.lineWidth = 1;
+      for(let x = 0; x <= WIDTH; x += CELL_SIZE){
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, HEIGHT);
+        ctx.stroke();
+      }
+      for(let y = 0; y <= HEIGHT; y += CELL_SIZE){
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(WIDTH, y);
+        ctx.stroke();
+      }
+      for(let i = 0; i<5; i++){
+        const pos = (performance.now()/5 + i*120)%(HEIGHT+WIDTH);
+        ctx.strokeStyle = `hsl(${(hueShift + i*60)%360}, 90%, 60%, 0.3)`;
+        ctx.beginPath();
+        ctx.moveTo(pos, 0);
+        ctx.lineTo(0, pos);
+        ctx.stroke();
+      }
+    }
+
+    function drawGlowingRect(x,y,rgb, opacity=1){
+      const [r,g,b] = rgb;
+      const px = x * CELL_SIZE;
+      const py = y * CELL_SIZE;
+      const gradient = ctx.createRadialGradient(px + CELL_SIZE/2, py + CELL_SIZE/2, CELL_SIZE/2, px + CELL_SIZE/2, py + CELL_SIZE/2, CELL_SIZE*1.2);
+      gradient.addColorStop(0, rgba(r,g,b, 0.4 * opacity));
+      gradient.addColorStop(1, rgba(r,g,b, 0));
+      ctx.fillStyle = gradient;
+      ctx.fillRect(px - CELL_SIZE*0.7, py - CELL_SIZE*0.7, CELL_SIZE*2.4, CELL_SIZE*2.4);
+      ctx.fillStyle = rgba(r,g,b, opacity);
+      ctx.shadowColor = rgba(r,g,b, 0.9 * opacity);
+      ctx.shadowBlur = 12;
+      ctx.fillRect(px + 2, py + 2, CELL_SIZE - 4, CELL_SIZE - 4);
+      ctx.shadowBlur = 0;
+    }
+
+    function drawPlayers() {
+      players.forEach(p => {
+        p.trail.forEach(str => {
+          const [x,y] = str.split(',').map(Number);
+          drawGlowingRect(x,y,p.currentNeonColor, 0.25);
+        });
+        if(p.alive){
+          const glowAlpha = 0.8 + 0.2 * Math.sin(performance.now() / 150);
+          drawGlowingRect(p.pos.x, p.pos.y, p.currentNeonColor, glowAlpha);
+        }
+      });
+    }
+
+    function drawItems(){
+      items.forEach(item=>{
+        const px = item.pos.x * CELL_SIZE + CELL_SIZE/2;
+        const py = item.pos.y * CELL_SIZE + CELL_SIZE/2;
+        const [r,g,b] = itemTypes[item.type].color;
+        const glow = ctx.createRadialGradient(px, py, 2, px, py, 12);
+        glow.addColorStop(0, rgba(r,g,b, 0.9));
+        glow.addColorStop(1, rgba(r,g,b, 0));
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(px, py, 10, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(px, py, 3.5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = rgba(r,g,b, 0.9);
+        ctx.font = 'bold 12px monospace';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(item.type[0].toUpperCase(), px, py);
+      });
+    }
+
+    function updateDirection(player) {
+      if(player.nextDir){
+        if((player.dir.x + player.nextDir.x !== 0) || (player.dir.y + player.nextDir.y !== 0)) {
+          player.dir = player.nextDir;
+        }
+        player.nextDir = null;
+      }
+    }
+
+    function countSafeSteps(startPos, direction, maxSteps=10){
+      let pos = {...startPos};
+      let steps = 0;
+      for(let i=0; i<maxSteps; i++){
+        pos = {
+          x: (pos.x + direction.x + COLS) % COLS,
+          y: (pos.y + direction.y + ROWS) % ROWS
+        };
+        let col = false;
+        for(const p of players){
+          if(p.trail.has(posToStr(pos))){
+            col = true;
+            break;
+          }
+        }
+        if(col) break;
+        steps++;
+      }
+      return steps;
+    }
+
+    function aiDecideDirection(aiPlayer) {
+      aiChangeCounter++;
+      if(aiChangeCounter % 3 !== 0) return;
+      const startPos = aiPlayer.pos;
+      const checkOrder = [
+        aiPlayer.dir,
+        {x: -aiPlayer.dir.y, y: aiPlayer.dir.x},
+        {x: aiPlayer.dir.y, y: -aiPlayer.dir.x},
+        {x: -aiPlayer.dir.x, y: -aiPlayer.dir.y}
+      ];
+      const candidates = checkOrder.map(dir => {
+        return {dir, safeSteps: countSafeSteps(startPos, dir, 10)};
+      });
+      candidates.sort((a,b) => b.safeSteps - a.safeSteps);
+      const best = candidates[0];
+      const currentDirData = candidates.find(c => c.dir.x === aiPlayer.dir.x && c.dir.y === aiPlayer.dir.y);
+      const keepCurrent = currentDirData.safeSteps >= best.safeSteps - 1;
+      if(keepCurrent){
+        aiPlayer.nextDir = aiPlayer.dir;
+      } else {
+        aiPlayer.nextDir = best.dir;
+      }
+    }
+
+    function createItem(){
+      if(items.length >= 3) return;
+      let tries = 0;
+      while(tries < 30){
+        const x = randInt(0, COLS);
+        const y = randInt(0, ROWS);
+        const posStr = `${x},${y}`;
+        let occupied = false;
+        for(const p of players){
+          if(p.trail.has(posStr)) {
+            occupied = true;
+            break;
+          }
+        }
+        if(!occupied){
+          const keys = Object.keys(itemTypes);
+          const type = keys[randInt(0, keys.length)];
+          items.push({pos: {x,y}, type});
+          break;
+        }
+        tries++;
+      }
+    }
+
+    function checkItemCollision(p){
+      for(let i=0; i<items.length; i++){
+        const item = items[i];
+        if(p.pos.x === item.pos.x && p.pos.y === item.pos.y){
+          handleItemEffect(p, item.type);
+          items.splice(i,1);
+          break;
+        }
+      }
+    }
+
+    function handleItemEffect(p, type){
+      if(type === "restart"){
+        setTimeout(() => resetGame(), 100);
+        return;
+      } else if(type === "kill"){
+        // 回归旧版秒杀功能：回到主界面（页面跳转）
+        window.location.href = "./index.html";
+        return;
+      } else if(type === "halve"){
+        const opponent = players.find(pl => pl !== p);
+        opponent.score = Math.floor(opponent.score / 2);
+        const trailArray = Array.from(opponent.trail);
+        const halfCount = Math.floor(trailArray.length / 2);
+        const newTrail = new Set(trailArray.slice(trailArray.length - halfCount));
+        opponent.trail = newTrail;
+        opponent.effects.halve = itemTypes.halve.duration;
+      } else {
+        p.effects[type] = itemTypes[type].duration;
+        if(type === 'speed'){
+          p.speedMultiplier = 0.5;
+        } else if(type === 'slow'){
+          p.speedMultiplier = 1.8;
+        }
+      }
+      p.currentColorBase = itemTypes[type].color;
+      p.currentNeonColor = itemTypes[type].color;
+    }
+
+    function updateEffects(p){
+      let aliveEffects = 0;
+      for(const key in p.effects){
+        p.effects[key]--;
+        if(p.effects[key] <= 0){
+          delete p.effects[key];
+          if(key === "speed" || key === "slow" || key === "halve" || key === "shield"){
+            p.speedMultiplier = 1;
+            p.currentColorBase = p.baseColorBase;
+            p.currentNeonColor = p.baseNeonColor;
+          }
+        } else {
+          aliveEffects++;
+        }
+      }
+      if(aliveEffects === 0){
+        p.speedMultiplier = 1;
+        p.currentColorBase = p.baseColorBase;
+        p.currentNeonColor = p.baseNeonColor;
+      }
+    }
+
+    function updateItemsDisplay(){
+      if(items.length === 0){
+        itemsDisplay.textContent = "当前地图道具: 无";
+        return;
+      }
+      const arr = items.map(item => {
+        const typeName = itemTypes[item.type].name;
+        const desc = itemTypes[item.type].desc || "";
+        const x = item.pos.x;
+        const y = item.pos.y;
+        return `${typeName}（${x},${y}）: ${desc}`;
+      });
+      itemsDisplay.textContent = "当前地图道具:\n" + arr.join("\n");
+    }
+
+    function updateUI(){
+      score1Elem.textContent = players[0].score;
+      score2Elem.textContent = players[1].score;
+      effect1Elem.textContent = formatEffects(players[0].effects);
+      effect2Elem.textContent = formatEffects(players[1].effects);
+      updateItemsDisplay();
+    }
+
+    function formatEffects(effects){
+      if(Object.keys(effects).length === 0) return '-';
+      let arr = [];
+      for(const e in effects){
+        arr.push(itemTypes[e].name);
+      }
+      return arr.join(' ');
+    }
+
+    function wrapPos(pos){
+      return {
+        x: (pos.x + COLS) % COLS,
+        y: (pos.y + ROWS) % ROWS
+      };
+    }
+
+    function update() {
+      if(gameOver) return;
+      itemTimer++;
+      if(itemTimer > ITEM_INTERVAL){
+        createItem();
+        itemTimer = 0;
+      }
+      players.forEach(p => {
+        if(!p.alive) return;
+        updateEffects(p);
+        if(p.isAI && mode === 'single') {
+          aiDecideDirection(p);
+        }
+        updateDirection(p);
+        const delay = baseSpeedDelay * p.speedMultiplier;
+        if(frameTimer % Math.round(delay / 10) !== 0) {
+          return;
+        }
+        const newPos = wrapPos({
+          x: p.pos.x + p.dir.x,
+          y: p.pos.y + p.dir.y
+        });
+        if(!p.effects.shield){
+          let collision = false;
+          for(const other of players){
+            if(other.trail.has(posToStr(newPos))){
+              collision = true;
+              break;
+            }
+          }
+          if(collision){
+            p.alive = false;
+            return;
+          }
+        }
+        p.pos = newPos;
+        p.trail.add(posToStr(newPos));
+        checkItemCollision(p);
+        p.score++;
+      });
+      const aliveCount = players.filter(p => p.alive).length;
+      if(aliveCount <= 1){
+        if(!gameOver){
+          gameOver = true;
+          const winner = players.find(p => p.alive);
+          if(winner){
+            winnerElem.textContent = winner.name + " 获胜！";
+          } else {
+            winnerElem.textContent = "平局！";
+          }
+          winnerElem.style.display = 'block';
+          restartBtn.style.display = 'inline-block';
+          backToHomeBtn.style.display = 'inline-block';
+          restartBtn.focus();
+        }
+      }
+      updateUI();
+      frameTimer++;
+    }
+
+    function draw() {
+      drawBackgroundGrid();
+      drawItems();
+      drawPlayers();
+    }
+
+    function gameLoop(){
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if(gameOver) return;
+      players.forEach(p => {
+        if(!p.isAI && p.keyMap[e.code]){
+          e.preventDefault();
+          p.nextDir = p.keyMap[e.code];
+        }
+      });
+    });
+
+    function resetGame() {
+      players[0].pos = {x: Math.floor(COLS / 4), y: Math.floor(ROWS / 2)};
+      players[0].dir = DIRS.right;
+      players[0].trail.clear();
+      players[0].trail.add(posToStr(players[0].pos));
+      players[0].alive = true;
+      players[0].nextDir = null;
+      players[0].isAI = false;
+      players[0].score = 0;
+      players[0].effects = {};
+      players[0].speedMultiplier = 1;
+      players[0].currentColorBase = players[0].baseColorBase;
+      players[0].currentNeonColor = players[0].baseNeonColor;
+
+      players[1].pos = {x: Math.floor(COLS * 3 / 4), y: Math.floor(ROWS / 2)};
+      players[1].dir = DIRS.left;
+      players[1].trail.clear();
+      players[1].trail.add(posToStr(players[1].pos));
+      players[1].alive = true;
+      players[1].nextDir = null;
+      players[1].score = 0;
+      players[1].effects = {};
+      players[1].speedMultiplier = 1;
+      players[1].currentColorBase = players[1].baseColorBase;
+      players[1].currentNeonColor = players[1].baseNeonColor;
+
+      winnerElem.style.display = 'none';
+      winnerElem.textContent = "";
+      restartBtn.style.display = 'none';
+      backToHomeBtn.style.display = 'none';
+
+      items.length = 0;
+      aiChangeCounter = 0;
+      frameTimer = 0;
+      itemTimer = 0;
+
+      if(mode === 'single') {
+        players[1].isAI = true;
+        players[1].name = "PersianCat";
+        name2Elem.textContent = "PersianCat";
+        infoElem.innerHTML = "玩家1 (蓝): WASD 控制<br>AI (红) PersianCat 自动控制";
+        singleBtn.classList.add('active');
+        singleBtn.setAttribute('aria-pressed', 'true');
+        doubleBtn.classList.remove('active');
+        doubleBtn.setAttribute('aria-pressed', 'false');
+      } else {
+        players[1].isAI = false;
+        players[1].name = "玩家2";
+        name2Elem.textContent = "玩家2";
+        infoElem.innerHTML = "玩家1 (蓝): WASD 控制<br>玩家2 (红): 方向键 控制";
+        doubleBtn.classList.add('active');
+        doubleBtn.setAttribute('aria-pressed', 'true');
+        singleBtn.classList.remove('active');
+        singleBtn.setAttribute('aria-pressed', 'false');
+      }
+
+      updateUI();
+
+      gameOver = false;
+      canvas.focus();
+    }
+
+    restartBtn.onclick = () => {
+      resetGame();
+    };
+
+    singleBtn.onclick = () => {
+      if(mode !== 'single'){
+        mode = 'single';
+        singleBtn.classList.add('active');
+        doubleBtn.classList.remove('active');
+        resetGame();
+      }
+    };
+
+    doubleBtn.onclick = () => {
+      if(mode !== 'double'){
+        mode = 'double';
+        doubleBtn.classList.add('active');
+        singleBtn.classList.remove('active');
+        resetGame();
+      }
+    };
+
+    backToHomeBtn.onclick = () => {
+      window.location.href = 'intro.html';
+    };
+
+    resetGame();
+    gameLoop();
+  </script>
+</body>
+</html>

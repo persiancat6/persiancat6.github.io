@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>关于波斯猫</title>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    #matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: black;
+    }
+
+    /* 顶部导航 */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1400px;
+      /* 加宽到1000px */
+      max-width: 1500px;
+      height: 90px;
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1.5px solid rgba(0, 255, 0, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 0 20px 20px;
+      z-index: 20;
+      padding: 0 30px;
+      box-sizing: border-box;
+    }
+
+    nav a {
+      min-width: 150px;
+      /* 固定最小宽度，保证4个字不换行 */
+      white-space: nowrap;
+      /* 禁止文字换行 */
+      text-align: center;
+      color: #a0f0a0;
+      text-decoration: none;
+      margin: 0 18px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 14px 40px;
+      /* 加大左右padding */
+      border-radius: 40px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 6px #00cc0044;
+      transition:
+        color 0.4s ease,
+        box-shadow 0.4s ease,
+        background-color 0.4s ease;
+    }
+
+    nav a::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 220%;
+      background: rgba(0, 255, 0, 0.22);
+      transform: translate(-50%, -50%) skewX(-25deg);
+      transition: width 0.4s ease;
+      z-index: -1;
+      border-radius: 50px;
+    }
+
+    nav a:hover::before {
+      width: 230%;
+    }
+
+    nav a:hover {
+      color: #002200;
+      background-color: #a0ff80;
+      box-shadow:
+        0 0 22px #66ff0066,
+        inset 0 0 18px #44aa0022;
+    }
+
+    nav a.active {
+      background: linear-gradient(135deg, #00ff00cc 0%, #00aa00ee 100%);
+      color: #002500;
+      box-shadow:
+        0 0 28px #00ff00cc,
+        inset 0 0 22px #00ff00cc;
+      text-shadow:
+        0 0 5px #00dd00aa,
+        0 0 12px #00ff00bb;
+    }
+
+    /* 内容导航按钮 */
+    .section-nav {
+      margin: 3rem 0 0;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .section-nav a {
+      min-width: 160px;
+      /* 固定宽度 */
+      white-space: nowrap;
+      /* 禁止换行 */
+      text-align: center;
+      display: inline-block;
+      padding: 1.1rem 42px;
+      /* 加大左右内边距 */
+      border: 3px solid #00ff00;
+      border-radius: 40px;
+      color: #a0f0a0;
+      font-weight: 800;
+      font-size: 1.35rem;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow:
+        0 0 16px #00ff0055,
+        inset 0 0 18px #00ff0044;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      transition:
+        color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease,
+        transform 0.3s ease;
+    }
+
+    .section-nav a::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 185%;
+      background: rgba(0, 255, 0, 0.30);
+      transform: translate(-50%, -50%) skewX(-25deg);
+      transition: width 0.25s ease;
+      border-radius: 50px;
+      z-index: -1;
+    }
+
+    .section-nav a:hover::before {
+      width: 240%;
+    }
+
+    .section-nav a:hover {
+      background-color: #7fff7fcc;
+      color: #003300;
+      box-shadow:
+        0 0 36px #00ff00dd,
+        inset 0 0 24px #00ff00cc;
+      transform: scale(1.12);
+      z-index: 10;
+    }
+
+    .section-nav a.active {
+      background: linear-gradient(135deg, #00ff44cc 0%, #008822ee 100%);
+      color: #001a00;
+      box-shadow:
+        0 0 28px #00ff00cc,
+        inset 0 0 22px #00ff00cc;
+      text-shadow:
+        0 0 8px #00dd00aa,
+        0 0 16px #00ff00cc;
+    }
+
+    .content {
+      position: relative;
+      top: 100px;
+      max-width: 900px;
+      margin: 2rem auto 4rem;
+      padding: 3.5rem 4rem;
+      background: rgba(0, 0, 0, 0.32);
+      border-radius: 22px;
+      box-shadow:
+        0 8px 44px 0 rgba(0, 255, 0, 0.38),
+        inset 0 0 14px rgba(0, 255, 0, 0.34);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(0, 255, 0, 0.35);
+      color: #acf7ac;
+      line-height: 1.7;
+      transition: max-width 0.4s ease, padding 0.4s ease;
+    }
+
+    h1 {
+      font-size: 3.4rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #00ff00;
+      text-shadow:
+        0 0 6px #00ff0044,
+        0 0 18px #00ff0080;
+    }
+
+    p {
+      font-size: 1.25rem;
+      margin-top: 1.2rem;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+      text-indent: 2em;
+    }
+
+    .image-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 860px;
+      margin: 2rem auto;
+    }
+
+    .responsive-img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 2px solid #00ff0066;
+      transition: transform 0.5s ease, border 0.3s ease;
+      object-fit: cover;
+    }
+
+    .responsive-img:hover {
+      transform: scale(1.05);
+      border: 2px solid #ccffcc;
+      cursor: pointer;
+    }
+
+
+
+
+
+    #transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 9999;
+    }
+
+    #transition-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    @media (max-width: 1024px) {
+      nav {
+        height: 80px;
+      }
+
+      nav a {
+        font-size: 1.1rem;
+        padding: 9px 22px;
+        margin: 0 14px;
+      }
+
+      .content {
+        max-width: 700px;
+        padding: 3rem 2.5rem;
+      }
+
+      h1 {
+        font-size: 2.6rem;
+      }
+
+      p {
+        font-size: 1.1rem;
+      }
+
+      .section-nav a {
+        padding: 0.9rem 2.3rem;
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        height: 70px;
+        width: 98%;
+      }
+
+      nav a {
+        font-size: 1rem;
+        padding: 8px 18px;
+        margin: 0 10px;
+      }
+
+      .content {
+        max-width: 90vw;
+        padding: 2rem 1.5rem;
+        margin-top: 90px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .image-container {
+        max-width: 860px;
+        margin: 1.5rem auto;
+        text-align: center;
+      }
+
+
+      .section-nav {
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .section-nav a {
+        padding: 0.7rem 1.8rem;
+        font-size: 1rem;
+        border-width: 2px;
+        border-radius: 28px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="matrix"></canvas>
+
+  <nav>
+    <a href="intro.html" >个人介绍</a>
+    <a href="skills.html" >技能树</a>
+    <a href="projects.html">项目活动</a>
+    <a href="contact.html"class="active">联系方式</a>
+    <a href="game.html">电子游戏</a>
+  </nav>
+
+  <div class="content" role="main" aria-label="个人介绍内容">
+    <h1>🐱 个人介绍 About Me</h1>
+    <p> 你好，我是波斯猫，一名 Unity 工程师，也是Unity中文课堂签约的网络讲师，初代Apple Vision Pro创业者，目前Base杭州。</p>
+    <div class="image-container">
+      <img src="assets/中文课堂.JPG" alt="中文课堂" class="responsive-img">
+    </div>
+
+     <!-- <p> 多元易境ALterSoft是我的团队，我们主要是制作一些好玩的数字媒体交互艺术如（AI，数字媒体，交互装置，数字人，XR，游戏），创造有趣。作为团队的创始人，我的工作就是把团队做大做强，
+      所以如果你有需要，或者你有兴趣，都非常欢迎联系我，我喜欢认识有趣的灵魂。
+     </p>
+    <div class="image-container">
+      <img src="assets/中文课堂.JPG" alt="中文课堂" class="responsive-img">
+    </div> -->
+
+
+     <p> 我热衷于参加各种黑客松活动，喜欢创造者的狂欢。</p>
+      <p> 精疲力尽的打磨产品，榨干我的全部想法，如果你也是同样如此，非常期待与你相识</p>
+    <div class="image-container">
+      <img src="assets/ADX24.JPG" alt="中文课堂" class="responsive-img">
+    </div>
+
+    <p>热爱虚拟同样也热爱现实。</p>
+    <p>我喜欢骑行，从天津骑行杭州；同样也喜欢徒步，行万里路，游历名山大川。</p>
+
+    <div class="image-container">
+      <img src="assets/骑行1.JPG" alt="中文课堂工作照" class="responsive-img">
+       <img src="assets/骑行2.JPG" alt="中文课堂工作照" class="responsive-img">
+       <img src="assets/骑行3.JPG" alt="中文课堂工作照" class="responsive-img">
+      <!-- <img src="assets/AVP.JPG" alt="示例图像" class="responsive-img"> -->
+    </div>
+
+  </div>
+
+
+  <div id="transition-overlay"></div>
+
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    const fontSize = 16;
+    let width, height, columns, drops;
+
+    function setup() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      columns = Math.floor(width / fontSize);
+      drops = [];
+      for (let i = 0; i < columns; i++) {
+        drops[i] = Math.floor(Math.random() * (height / fontSize));
+      }
+    }
+    setup();
+    window.addEventListener('resize', setup);
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%";
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 35);
+
+    const overlay = document.getElementById('transition-overlay');
+    const navLinks = document.querySelectorAll('nav a, .section-nav a');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const href = link.href;
+        overlay.classList.add('active');
+        setTimeout(() => {
+          window.location.href = href;
+        }, 500);
+      });
+    });
+
+    window.onload = () => {
+      overlay.classList.remove('active');
+    };
+  </script>
+
+</body>
+
+</html>
