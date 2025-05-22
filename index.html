@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>黑客帝国XR程序员 - 封面</title>
+<title>波斯猫PersianCatStudio</title>
 <style>
   body, html {
     margin:0; padding:0; height:100%;
@@ -130,8 +130,9 @@
 
 <div class="content" role="main" aria-label="封面内容">
   <img class="avatar" src="assets/PersonCat_Logo.jpg" alt="个人头像" />
-  <h1>欢迎来到Neo的黑客帝国XR世界</h1>
-  <button class="enter-btn" id="enterBtn" aria-label="进入个人介绍页">进入个人介绍</button>
+  <h1>PersiancatStudio</h1>
+  <h1>波斯猫的数字世界</h1>
+  <button class="enter-btn" id="enterBtn" aria-label="进入个人介绍页">进入</button>
 </div>
 
 <div id="transition-overlay"></div>
@@ -142,30 +143,49 @@
   let planeMesh;
   let clock = new THREE.Clock();
 
+  // 保证网格随窗口尺寸变化同比例缩放，避免显示不足
+  // 方案：渲染器 canvas 设置为100vw*100vh， 并按窗口宽高比例调整相机FOV及平面尺寸
+
+  function computePlanSizeAndFov() {
+    // 设计基础网格大小，基于16:9（宽高比）
+    const aspect = window.innerWidth / window.innerHeight;
+
+    // 基础高度固定
+    const baseHeight = 120;
+    // 宽度根据当前窗口比例调整，保证完整显示且留白空间。
+    const baseWidth = baseHeight * aspect;
+
+    // 相机fov按固定视角内裁剪
+    const fov = 45;
+
+    return { width: baseWidth, height: baseHeight, fov };
+  }
+
   function init() {
     const container = document.getElementById('container');
     scene = new THREE.Scene();
 
-    // 透视相机设置，中景焦距，营造深远空间感
-    const fov = 45;
+    // 获取当前尺寸和建议参数
+    const { width: planeWidth, height: planeHeight, fov } = computePlanSizeAndFov();
+
+    // 透视相机
     const aspect = window.innerWidth / window.innerHeight;
     const near = 0.1;
-    const far = 300;
+    const far = 350;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 28, 45);
+    // 摄像机距离可根据平面尺寸做微调
+    camera.position.set(0, planeHeight * 0.25, planeHeight * 0.45);
     camera.lookAt(0, 0, 0);
 
-    // 网格大小适中留白布局
-    const planeWidth = 100;
-    const planeHeight = 120;
+    // 网格细分数量
     const segmentsX = 90;
     const segmentsY = 110;
 
-    // 创建平面几何，旋转成水平
+    // 创建几何体
     const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight, segmentsX, segmentsY);
     geometry.rotateX(- Math.PI / 2);
 
-    // 线框材质，绿色半透明带微发光感
+    // 线框材质，绿色半透明
     const material = new THREE.MeshBasicMaterial({
       color: 0x00ff00,
       wireframe: true,
@@ -176,11 +196,10 @@
     planeMesh = new THREE.Mesh(geometry, material);
     scene.add(planeMesh);
 
-    // 渲染器，启用透明背景
+    // 渲染器
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 0); // 背景透明
-    // 覆盖在body背景层之上，内容之下
+    renderer.setClearColor(0x000000, 0); // 透明背景
     renderer.domElement.style.position = 'fixed';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
@@ -192,35 +211,44 @@
     window.addEventListener('resize', onWindowResize, false);
   }
 
-  // 窗口缩放自适应
   function onWindowResize() {
-    camera.aspect = window.innerWidth/window.innerHeight;
+    const { width: planeWidth, height: planeHeight, fov } = computePlanSizeAndFov();
+
+    const aspect = window.innerWidth / window.innerHeight;
+
+    camera.aspect = aspect;
+    camera.fov = fov;
+    camera.position.set(0, planeHeight * 0.25, planeHeight * 0.45);
     camera.updateProjectionMatrix();
+
+    // 重新设置平面尺寸
+    if(planeMesh) {
+      planeMesh.geometry.dispose();
+      const segmentsX = 90;
+      const segmentsY = 110;
+      const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight, segmentsX, segmentsY);
+      geometry.rotateX(- Math.PI / 2);
+      planeMesh.geometry = geometry;
+    }
+
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  // 缓慢波浪起伏，叠加多频正弦波和缓和曲面高低差异，体现中式“留白”美学空间感
+  // 波浪起伏动画，放缓速度
   function animate() {
     requestAnimationFrame(animate);
-    const time = clock.getElapsedTime() * 0.35; // 放慢速度
+    const time = clock.getElapsedTime() * 0.35;
 
     const position = planeMesh.geometry.attributes.position;
     for (let i = 0; i < position.count; i++) {
       const x = position.getX(i);
       const z = position.getZ(i);
 
-      // 组合法，顶点高度分布避免统一波浪，留白空间感更明显
-      // 添加缓慢起伏与局部起伏叠加，范围与强度适当限制避免尖峰
       let baseHeight = Math.sin(x * 0.12 + time) * 1.2 + Math.cos(z * 0.15 + time * 1.1) * 1.1;
       let detailHeight = Math.sin((x + z) * 0.25 + time * 0.7) * 0.5 + Math.cos(x * 0.6 - z * 0.4 + time*0.9) * 0.3;
       let totalHeight = baseHeight + detailHeight;
-
-      // 追加微幅随机噪声，模拟自然不规则山川
       totalHeight += (Math.sin(x*0.9 + z*0.4 + time*1.3) * 0.1);
-
-      // 限高防止过于夸张
       totalHeight = THREE.MathUtils.clamp(totalHeight, -2, 3);
-
       position.setY(i, totalHeight);
     }
     position.needsUpdate = true;
@@ -230,7 +258,6 @@
 
   init();
   animate();
-
 
   // 页面跳转动画
   const overlay = document.getElementById('transition-overlay');
