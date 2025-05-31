@@ -348,6 +348,64 @@
       }
 
     }
+    .social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: inline-block;
+  padding: 1.1rem 2.8rem;
+  border: 3px solid #00ff00;
+  border-radius: 40px;
+  color: #a0f0a0;
+  font-weight: 800;
+  font-size: 1.35rem;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 0 16px #00ff0055,
+    inset 0 0 18px #00ff0044;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease;
+}
+
+.social-link::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 220%;
+  background: rgba(0, 255, 0, 0.25);
+  transform: translate(-50%, -50%) skewX(-25deg);
+  transition: width 0.3s ease;
+  z-index: -1;
+  border-radius: 50px;
+}
+
+.social-link:hover::before {
+  width: 240%;
+}
+
+.social-link:hover {
+  background-color: #a0ff80;
+  color: #002200;
+  box-shadow:
+    0 0 28px #00ff00cc,
+    inset 0 0 22px #00ff00cc;
+  transform: scale(1.08);
+  z-index: 10;
+}
+
   </style>
 </head>
 
@@ -364,37 +422,16 @@
   </nav>
 
   <div class="content" role="main" aria-label="个人介绍内容">
-    <h1>🐱 个人介绍 About Me</h1>
-    <p> 你好，我是波斯猫，一名 Unity 工程师，也是Unity中文课堂签约的网络讲师，初代Apple Vision Pro创业者，目前Base杭州。</p>
-    <div class="image-container">
-      <img src="assets/中文课堂.JPG" alt="中文课堂" class="responsive-img">
-    </div>
-
-     <!-- <p> 多元易境ALterSoft是我的团队，我们主要是制作一些好玩的数字媒体交互艺术如（AI，数字媒体，交互装置，数字人，XR，游戏），创造有趣。作为团队的创始人，我的工作就是把团队做大做强，
-      所以如果你有需要，或者你有兴趣，都非常欢迎联系我，我喜欢认识有趣的灵魂。
-     </p>
-    <div class="image-container">
-      <img src="assets/中文课堂.JPG" alt="中文课堂" class="responsive-img">
-    </div> -->
+    <h1>📧 联系方式 Connect Me</h1>
+    <p> 微信WeChat：PersianCat_6</p>
+    <p> 邮箱EMail：persiancat_6@icloud.com</p>
+   <div class="social-buttons">
+  <a class="social-link" href="https://space.bilibili.com/43787347?spm_id_from=333.1007.0.0" target="_blank">📺 哔哩哔哩</a>
+  <a class="social-link" href="https://www.xiaohongshu.com/user/profile/5d1f5e650000000010021504?xsec_token=YB5cN3sfHoB4B7Gb4ouMp0cwpiW3nhXEC97aNEY156P10=&xsec_source=app_share&xhsshare=CopyLink&appuid=5d1f5e650000000010021504&apptime=1748692752&share_id=66c37751940748698f832771d1cf2471" target="_blank">📷 小红书</a>
+</div>
 
 
-     <p> 我热衷于参加各种黑客松活动，喜欢创造者的狂欢。</p>
-      <p> 精疲力尽的打磨产品，榨干我的全部想法，如果你也是同样如此，非常期待与你相识</p>
-    <div class="image-container">
-      <img src="assets/ADX24.JPG" alt="中文课堂" class="responsive-img">
-    </div>
-
-    <p>热爱虚拟同样也热爱现实。</p>
-    <p>我喜欢骑行，从天津骑行杭州；同样也喜欢徒步，行万里路，游历名山大川。</p>
-
-    <div class="image-container">
-      <img src="assets/骑行1.JPG" alt="中文课堂工作照" class="responsive-img">
-       <img src="assets/骑行2.JPG" alt="中文课堂工作照" class="responsive-img">
-       <img src="assets/骑行3.JPG" alt="中文课堂工作照" class="responsive-img">
-      <!-- <img src="assets/AVP.JPG" alt="示例图像" class="responsive-img"> -->
-    </div>
-
-  </div>
+    
 
 
   <div id="transition-overlay"></div>
