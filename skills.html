@@ -27,14 +27,12 @@
       background: black;
     }
 
-    /* 顶部导航 */
     nav {
       position: fixed;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 1400px;
-      /* 加宽到1000px */
       max-width: 1500px;
       height: 90px;
       background: rgba(0, 0, 0, 0.35);
@@ -52,9 +50,7 @@
 
     nav a {
       min-width: 150px;
-      /* 固定最小宽度，保证4个字不换行 */
       white-space: nowrap;
-      /* 禁止文字换行 */
       text-align: center;
       color: #a0f0a0;
       text-decoration: none;
@@ -62,17 +58,13 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       padding: 14px 40px;
-      /* 加大左右padding */
       border-radius: 40px;
       font-size: 1.3rem;
       cursor: pointer;
       position: relative;
       overflow: hidden;
       box-shadow: 0 0 6px #00cc0044;
-      transition:
-        color 0.4s ease,
-        box-shadow 0.4s ease,
-        background-color 0.4s ease;
+      transition: color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
     }
 
     nav a::before {
@@ -96,97 +88,14 @@
     nav a:hover {
       color: #002200;
       background-color: #a0ff80;
-      box-shadow:
-        0 0 22px #66ff0066,
-        inset 0 0 18px #44aa0022;
+      box-shadow: 0 0 22px #66ff0066, inset 0 0 18px #44aa0022;
     }
 
     nav a.active {
       background: linear-gradient(135deg, #00ff00cc 0%, #00aa00ee 100%);
       color: #002500;
-      box-shadow:
-        0 0 28px #00ff00cc,
-        inset 0 0 22px #00ff00cc;
-      text-shadow:
-        0 0 5px #00dd00aa,
-        0 0 12px #00ff00bb;
-    }
-
-    /* 内容导航按钮 */
-    .section-nav {
-      margin: 3rem 0 0;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .section-nav a {
-      min-width: 160px;
-      /* 固定宽度 */
-      white-space: nowrap;
-      /* 禁止换行 */
-      text-align: center;
-      display: inline-block;
-      padding: 1.1rem 42px;
-      /* 加大左右内边距 */
-      border: 3px solid #00ff00;
-      border-radius: 40px;
-      color: #a0f0a0;
-      font-weight: 800;
-      font-size: 1.35rem;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow:
-        0 0 16px #00ff0055,
-        inset 0 0 18px #00ff0044;
-      user-select: none;
-      position: relative;
-      overflow: hidden;
-      transition:
-        color 0.25s ease,
-        box-shadow 0.25s ease,
-        background-color 0.25s ease,
-        transform 0.3s ease;
-    }
-
-    .section-nav a::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 0;
-      height: 185%;
-      background: rgba(0, 255, 0, 0.30);
-      transform: translate(-50%, -50%) skewX(-25deg);
-      transition: width 0.25s ease;
-      border-radius: 50px;
-      z-index: -1;
-    }
-
-    .section-nav a:hover::before {
-      width: 240%;
-    }
-
-    .section-nav a:hover {
-      background-color: #7fff7fcc;
-      color: #003300;
-      box-shadow:
-        0 0 36px #00ff00dd,
-        inset 0 0 24px #00ff00cc;
-      transform: scale(1.12);
-      z-index: 10;
-    }
-
-    .section-nav a.active {
-      background: linear-gradient(135deg, #00ff44cc 0%, #008822ee 100%);
-      color: #001a00;
-      box-shadow:
-        0 0 28px #00ff00cc,
-        inset 0 0 22px #00ff00cc;
-      text-shadow:
-        0 0 8px #00dd00aa,
-        0 0 16px #00ff00cc;
+      box-shadow: 0 0 28px #00ff00cc, inset 0 0 22px #00ff00cc;
+      text-shadow: 0 0 5px #00dd00aa, 0 0 12px #00ff00bb;
     }
 
     .content {
@@ -197,182 +106,139 @@
       padding: 3.5rem 4rem;
       background: rgba(0, 0, 0, 0.32);
       border-radius: 22px;
-      box-shadow:
-        0 8px 44px 0 rgba(0, 255, 0, 0.38),
-        inset 0 0 14px rgba(0, 255, 0, 0.34);
+      box-shadow: 0 8px 44px 0 rgba(0, 255, 0, 0.38), inset 0 0 14px rgba(0, 255, 0, 0.34);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1.5px solid rgba(0, 255, 0, 0.35);
       color: #acf7ac;
       line-height: 1.7;
-      transition: max-width 0.4s ease, padding 0.4s ease;
     }
 
     h1 {
       font-size: 3.4rem;
       margin-top: 0;
-      margin-bottom: 1rem;
       color: #00ff00;
-      text-shadow:
-        0 0 6px #00ff0044,
-        0 0 18px #00ff0080;
+      text-shadow: 0 0 6px #00ff0044, 0 0 18px #00ff0080;
     }
 
     p {
       font-size: 1.25rem;
-      margin-top: 1.2rem;
-      max-width: 860px;
-      margin-left: auto;
-      margin-right: auto;
       text-indent: 2em;
     }
 
-    .image-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      max-width: 860px;
-      margin: 2rem auto;
+    a {
+      color: #00ff00;
     }
 
-    .responsive-img {
+    .skill-bar {
+      margin: 1.5rem 0;
+    }
+
+    .skill-label {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #00ff00;
+      margin-bottom: 0.4rem;
+    }
+
+    .progress-container {
       width: 100%;
-      height: auto;
-      border-radius: 12px;
-      border: 2px solid #00ff0066;
-      transition: transform 0.5s ease, border 0.3s ease;
-      object-fit: cover;
+      background-color: rgba(0, 255, 0, 0.15);
+      border: 1px solid #00ff00;
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px #00ff0055;
     }
 
-    .responsive-img:hover {
-      transform: scale(1.05);
-      border: 2px solid #ccffcc;
-      cursor: pointer;
+    .progress-bar {
+      height: 20px;
+      background: linear-gradient(90deg, #00ff00cc, #00aa00ee);
+      width: 0%;
+      border-radius: 30px;
+      transition: width 1.5s ease-in-out;
+      box-shadow: 0 0 12px #00ff00aa;
     }
 
-
-
-
-
-    #transition-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: black;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-      z-index: 9999;
-    }
-
-    #transition-overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    @media (max-width: 1024px) {
-      nav {
-        height: 80px;
-      }
-
-      nav a {
-        font-size: 1.1rem;
-        padding: 9px 22px;
-        margin: 0 14px;
-      }
-
-      .content {
-        max-width: 700px;
-        padding: 3rem 2.5rem;
-      }
-
-      h1 {
-        font-size: 2.6rem;
-      }
-
-      p {
-        font-size: 1.1rem;
-      }
-
-      .section-nav a {
-        padding: 0.9rem 2.3rem;
-        font-size: 1.1rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      nav {
-        height: 70px;
-        width: 98%;
-      }
-
-      nav a {
-        font-size: 1rem;
-        padding: 8px 18px;
-        margin: 0 10px;
-      }
-
-      .content {
-        max-width: 90vw;
-        padding: 2rem 1.5rem;
-        margin-top: 90px;
-      }
-
-      h1 {
-        font-size: 2.2rem;
-      }
-
-      p {
-        font-size: 1rem;
-      }
-
-      .image-container {
-        max-width: 860px;
-        margin: 1.5rem auto;
-        text-align: center;
-      }
-
-
-      .section-nav {
-        gap: 1rem;
-        justify-content: center;
-      }
-
-      .section-nav a {
-        padding: 0.7rem 1.8rem;
-        font-size: 1rem;
-        border-width: 2px;
-        border-radius: 28px;
-      }
-
+    .progress-text {
+      font-size: 0.9rem;
+      color: #acf7ac;
+      margin-top: 0.3rem;
+      text-align: right;
     }
   </style>
 </head>
 
 <body>
-
   <canvas id="matrix"></canvas>
 
   <nav>
-    <a href="intro.html" >个人介绍</a>
+    <a href="intro.html">个人介绍</a>
     <a href="skills.html" class="active">技能树</a>
     <a href="projects.html">项目活动</a>
     <a href="contact.html">联系方式</a>
     <a href="game.html">电子游戏</a>
   </nav>
 
-  <div class="content" role="main" aria-label="技能树">
-    <h1>🌲技能树 Skills Tree</h1>
-    <p> 你好，我是波斯猫，一名 Unity 工程师，也是Unity中文课堂签约的网络讲师，初代Apple Vision Pro创业者，目前Base杭州。</p>
-    <div class="image-container">
-     
+  <div class="content">
+    <h1>🌲 技能树 Skills Tree</h1>
+    <p>在持续进化的数字世界中，我构建了一棵属于自己的技能树，跨越虚拟现实、交互设计、人工智能与跨平台开发等多个领域。</p>
+
+    <h2>🧬 技能掌握程度</h2>
+
+    <div class="skill-bar">
+      <div class="skill-label">Unity </div>
+      <div class="progress-container"><div class="progress-bar" style="width: 100%;"></div></div>
+      <div class="progress-text">100%</div>
+    </div>
+    <div class="skill-bar">
+      <div class="skill-label">XR开发</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 90%;"></div></div>
+      <div class="progress-text">90%</div>
+    </div>
+      <div class="skill-bar">
+      <div class="skill-label">VisionPro</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 90%;"></div></div>
+      <div class="progress-text">90%</div>
+    </div>
+  
+    <div class="skill-bar">
+      <div class="skill-label">C# 编程</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 95%;"></div></div>
+      <div class="progress-text">95%</div>
     </div>
 
-   
-  </div>
+    <div class="skill-bar">
+      <div class="skill-label">Python</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 80%;"></div></div>
+      <div class="progress-text">80%</div>
+    </div>
+       <div class="skill-bar">
+      <div class="skill-label">Swift</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 70%;"></div></div>
+      <div class="progress-text">70%</div>
+    </div>
+    <div class="skill-bar">
+      <div class="skill-label">Arduino</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 90%;"></div></div>
+      <div class="progress-text">90%</div>
+    </div>
+     <div class="skill-bar">
+      <div class="skill-label">交互装置</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 100%;"></div></div>
+      <div class="progress-text">100%</div>
+    </div>
+    <div class="skill-bar">
+      <div class="skill-label">HTML / CSS</div>
+      <div class="progress-container"><div class="progress-bar" style="width: 90%;"></div></div>
+      <div class="progress-text">90%</div>
+    </div>
 
+    
+    
+
+
+    <p>我的技能不仅在于掌握工具，更在于将技术与艺术、体验与交互融合。欢迎访问 <a href="https://space.bilibili.com/43787347" target="_blank">哔哩哔哩主页</a> 查看我的项目演示。</p>
+  </div>
 
   <div id="transition-overlay"></div>
 
@@ -410,8 +276,7 @@
     setInterval(draw, 35);
 
     const overlay = document.getElementById('transition-overlay');
-    const navLinks = document.querySelectorAll('nav a, .section-nav a');
-
+    const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
@@ -425,9 +290,15 @@
 
     window.onload = () => {
       overlay.classList.remove('active');
+
+      // Animate progress bars
+      const bars = document.querySelectorAll('.progress-bar');
+      bars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => bar.style.width = width, 100);
+      });
     };
   </script>
-
 </body>
-
 </html>
